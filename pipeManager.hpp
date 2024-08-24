@@ -3,6 +3,8 @@
 class pipe  {
 public:
     sf::Vector2f pos;
+
+    bool checkCollsion(sf::Vector2f) const;
 };
 class pipeManager {
 private:
@@ -12,4 +14,5 @@ public:
     pipeManager();
     void update(float deltaTime);
     void render(sf::RenderWindow& window) const;
+    bool checkCollision(sf::Vector2f) const;
 };

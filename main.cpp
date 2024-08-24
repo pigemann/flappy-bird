@@ -13,12 +13,7 @@ nice to have (optional):_camera sheck
                         _implement bird rotaion when it s falling or jumping 
                         _make paralex effect
 */                  
-bool overlap(int x1, int w1, int x2, int w2) {
-    return (x1 <= x2 && x1 >= x2 + w2) || (x1 + w1 <= x2 && x1 + w1 >= x2 + w2) || (x1 < x2 && x2 + 2 < x1 + w1);
-}           
-bool overlap(FloatRect rect1, FloatRect rect2) {
-    return overlap(rect1.left, rect1.width, rect2.left, rect2.width) && overlap(rect1.top, rect1.height, rect2.top, rect2.height);
-}           
+          
 Sprite pipe1;
 int main()
 {           
@@ -77,6 +72,12 @@ int main()
             velocity = 500;
         }
         bird.move(0, velocity  * DT);
+
+        if(manager.checkCollision(bird.getPosition()))
+        {
+            // ...
+        }
+
         window.clear(Color::Blue);
         manager.update(DT);
         manager.render(window);
