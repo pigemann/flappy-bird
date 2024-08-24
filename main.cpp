@@ -76,6 +76,7 @@ int main()
         if(manager.checkCollision(bird.getPosition()))
         {
             // ...
+            std::cout << "collision detected" << std::endl;
         }
 
         window.clear(Color::Blue);

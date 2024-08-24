@@ -4,7 +4,7 @@ class pipe  {
 public:
     sf::Vector2f pos;
 
-    bool checkCollsion(sf::Vector2f) const;
+    bool checkCollision(sf::Vector2f) const;
 };
 class pipeManager {
 private:
