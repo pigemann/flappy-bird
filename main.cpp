@@ -15,8 +15,14 @@ nice to have (optional):_camera sheck
 */                  
           
 Sprite pipe1;
+int score = 0;
 int main()
 {           
+    float radius = 0;
+    float raduisSpeed = 1500;
+    CircleShape dead(radius);
+    dead.setFillColor(Color::Black);
+    dead.setPosition(windowWidth / 2 - 50, windowHight / 2 - 50);
     Clock DeltaTime;
     Clock GameClock;
     float JumpCoolDown = 0; 
@@ -37,13 +43,23 @@ int main()
     pipe1.setTexture(txtPipe);
     pipe1.setScale(0.4f,1);
     pipe1.setPosition(900, -55 - (rand() % 295 + 1));
-    Text txt ("why is this so hard " , font , textSize);
+    //Text txt2( (String) score , font, textSize);
+    Text txt ("YOU LOST " , font , textSize);
     setText(txt);
+    txt.setPosition(300,-150);
+    Text txt1("YOUR SCORE IS : ", font, textSize);
+    setText(txt1);
+    txt1.setPosition(-500, 250);
+    Text txt2("YOUR BEST SCORE IS : ", font, textSize);
+    setText(txt2);
+    txt2.setPosition(-700, 400);
     bird.setColor(Color(bird.getColor().r, bird.getColor().g,bird.getColor().b,255));
     float DT;
+    float dt;
+    bool play = true; 
     while (window.isOpen())
     {
-        DT = DeltaTime.restart().asSeconds();
+        dt = DeltaTime.restart().asSeconds();
         Event event;
         while (window.pollEvent(event))
         {
@@ -56,39 +72,87 @@ int main()
                 }
             }
         }
-        //if (pipe1.getPosition().x <= 0 && pipe1.getPosition().x >= 0 && bird.getPosition().y <= 0 && bird.getPosition().y >= 0) {
-            //std::cout << "collision detected " << std::endl; 
-        //}
-        //std::cout << pipe1.getPosition().x << std::endl;    
-        if (Keyboard::isKeyPressed(Keyboard::Space) && GameClock.getElapsedTime().asSeconds() > JumpCoolDown){
-            JumpCoolDown = 1+GameClock.getElapsedTime().asSeconds();
-            velocity = -420 ;
-        }
-        if (pipe1.getPosition().x < -450) {
-            pipe1.setPosition(900, -55 - (rand() % 295 + 1));
-        }
-        velocity += gravity  * DT;
-        if (velocity > 500) {
-            velocity = 500;
-        }
-        bird.move(0, velocity  * DT);
+        while (play) {
+            DT = DeltaTime.restart().asSeconds();
+            while (window.pollEvent(event))
+            {
+                if (event.type == Event::Closed) {
+                    window.close();
+                }
+                if (event.type == Event::KeyPressed) {
+                    if (event.key.code == Keyboard::Escape) {
+                        //...
+                    }
+                }
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Space) && GameClock.getElapsedTime().asSeconds() > JumpCoolDown) {
+                JumpCoolDown = 1 + GameClock.getElapsedTime().asSeconds();
+                velocity = -420;
+            }
+            if (pipe1.getPosition().x < -450) {
+                pipe1.setPosition(900, -55 - (rand() % 295 + 1));
+            }
+            velocity += gravity * DT;
+            if (velocity > 500) {
+                velocity = 500;
+            }
+            if (bird.getPosition().y <= -70) {
+                bird.setPosition(200, 670);
+            }
+            if (bird.getPosition().y >= 680) {
+                bird.setPosition(200, -40);
+            }
+            bird.move(0, velocity * DT);
+            if (manager.checkCollision(bird.getPosition()))
+            {
+                play = false;
+                //std::cout << "collision detected" << std::endl;
+            }
 
-        if(manager.checkCollision(bird.getPosition()))
+
+            window.clear(Color::Blue);
+            manager.update(DT);
+            manager.render(window);
+            window.draw(bird);
+            window.display();
+            std::cout << score << std::endl;
+        }
+        bird.move(0, velocity*dt);
+        velocity += gravity * dt;
+        if (bird.getPosition().y >= 700 && radius < 2100)
         {
-            // ...
-            std::cout << "collision detected" << std::endl;
+            dead.setRadius(radius);
+            radius += raduisSpeed * dt;
+            dead.setOrigin(radius / 2, radius / 2);
+            
         }
-
+        if (radius >= 2100 && txt.getPosition().y<=100)
+        {
+            txt.move(0, 400*dt);
+        }
+        if (txt.getPosition().y >= 100 && txt1.getPosition().x <= 50)
+        {
+            txt1.move(400*dt, 0);
+        }
+        if ( txt1.getPosition().x >= 50 && txt2.getPosition().x <= 50)
+        {
+            txt2 .move(400 * dt, 0);
+        }
         window.clear(Color::Blue);
-        manager.update(DT);
         manager.render(window);
         window.draw(bird);
+        window.draw(dead);
+        window.draw(txt);
+        window.draw(txt1);
+        window.draw(txt2);
         window.display();
-    } 
+    }
     return 0;
-}       
+}      
 void setText(Text& text) {
     text.setFillColor(Color::Green);
     text.setStyle(Text::Bold);
     text.setPosition(windowWidth / 2 - 218, windowHight / 2 - 50);
 }           
+        
+        
