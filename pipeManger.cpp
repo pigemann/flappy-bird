@@ -2,7 +2,8 @@
 extern sf::Sprite pipe1; 
 extern int score;
 pipeManager::pipeManager() {
-    for (int j = 0; j < PIPES; j++) {
+    for (int j = 0; j < PIPES; j++) 
+    {
         pipes[j].pos.y = -55 - (rand() % 295 + 1);
         pipes[j].pos.x = 900 + j * 400;
     }
@@ -70,4 +71,12 @@ bool pipe::checkCollision(sf::Vector2f birdPosition) const
         return true;
     }
     return false;
+}
+pipeManager::~pipeManager() 
+{
+    for (int j = 0; j < PIPES; j++) 
+{
+        pipes[j].pos.y = -55 - (rand() % 295 + 1);
+        pipes[j].pos.x = 900 + j * 400;
+    }
 }

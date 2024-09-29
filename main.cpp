@@ -18,6 +18,8 @@ Sprite pipe1;
 int score = 0;
 int main()
 {           
+    int bestScore = 0;
+    srand(time(nullptr));
     float radius = 0;
     float raduisSpeed = 1500;
     CircleShape dead(radius);
@@ -29,8 +31,6 @@ int main()
     float couldown1 = 0;
     int gravity = 600;
     float velocity = 0 ;
-    pipeManager manager;
-    srand(time(nullptr));
     font.loadFromFile("ressource/TheFontIAmUsing.ttf");
     txtBird.loadFromFile("ressource/bird.png");
     txtPipe.loadFromFile("ressource/pipe.png");
@@ -42,7 +42,6 @@ int main()
     bird.setPosition(200, 200);
     pipe1.setTexture(txtPipe);
     pipe1.setScale(0.4f,1);
-    pipe1.setPosition(900, -55 - (rand() % 295 + 1));
     //Text txt2( (String) score , font, textSize);
     Text txt ("YOU LOST " , font , textSize);
     setText(txt);
@@ -56,7 +55,8 @@ int main()
     bird.setColor(Color(bird.getColor().r, bird.getColor().g,bird.getColor().b,255));
     float DT;
     float dt;
-    bool play = true; 
+    bool play = true;
+    pipeManager manager;
     while (window.isOpen())
     {
         dt = DeltaTime.restart().asSeconds();
@@ -69,6 +69,17 @@ int main()
             if (event.type == Event::KeyPressed) {
                 if (event.key.code == Keyboard::Escape) {
                     window.close();
+                }
+            }
+            if (event.type == Event::KeyPressed) {
+                if (event.key.code == Keyboard::R) {
+                    play = true;
+                    txt1.setPosition(-500, 250);
+                    txt.setPosition(300, -150);
+                    txt2.setPosition(-700, 400);
+                    radius = 0;
+                    bird.setPosition(200, 200);
+                    manager.~pipeManager();
                 }
             }
         }
@@ -89,9 +100,6 @@ int main()
                 JumpCoolDown = 1 + GameClock.getElapsedTime().asSeconds();
                 velocity = -420;
             }
-            if (pipe1.getPosition().x < -450) {
-                pipe1.setPosition(900, -55 - (rand() % 295 + 1));
-            }
             velocity += gravity * DT;
             if (velocity > 500) {
                 velocity = 500;
@@ -106,6 +114,8 @@ int main()
             if (manager.checkCollision(bird.getPosition()))
             {
                 play = false;
+                bestScore = score;
+                score = 0; 
                 //std::cout << "collision detected" << std::endl;
             }
 

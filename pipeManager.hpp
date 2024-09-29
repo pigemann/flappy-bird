@@ -12,6 +12,7 @@ private:
     pipe pipes[PIPES];
 public:
     pipeManager();
+    ~pipeManager();
     void update(float deltaTime);
     void render(sf::RenderWindow& window) const;
     bool checkCollision(sf::Vector2f) const;
